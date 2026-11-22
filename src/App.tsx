@@ -2,6 +2,16 @@ import { invoke } from '@tauri-apps/api/core';
 import { useState } from 'react';
 import './App.css';
 import reactLogo from './assets/react.svg';
+import { Button } from './components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './components/ui/card';
 
 function App() {
   const [greetMsg, setGreetMsg] = useState('');
@@ -15,6 +25,21 @@ function App() {
   return (
     <main className='container'>
       <h1>Welcome to Tauri + React</h1>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Card Title</CardTitle>
+          <CardDescription>Card Description</CardDescription>
+          <CardAction>Card Action</CardAction>
+        </CardHeader>
+        <CardContent>
+          <p>Card Content</p>
+        </CardContent>
+        <CardFooter>
+          <p>Card Footer</p>
+          <Button className='cursor-pointer'>Hi mark</Button>
+        </CardFooter>
+      </Card>
 
       <div className='row'>
         <a href='https://vite.dev' target='_blank'>
@@ -30,7 +55,7 @@ function App() {
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
       <form
-        className='row'
+        className='bg-red-100'
         onSubmit={e => {
           e.preventDefault();
           greet();
