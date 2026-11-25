@@ -1,17 +1,9 @@
-import { invoke } from '@tauri-apps/api/core';
+import { convertFileSrc, invoke } from '@tauri-apps/api/core';
+
+import { open } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import './App.css';
-import reactLogo from './assets/react.svg';
 import { Button } from './components/ui/button';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './components/ui/card';
 
 function App() {
   const [greetMsg, setGreetMsg] = useState('');
@@ -22,53 +14,44 @@ function App() {
     setGreetMsg(await invoke('greet', { name }));
   }
 
+  const [img, setImg] = useState<string>('');
+
+  const selectImage = async () => {
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Images',
+          extensions: ['png', 'jpg', 'jpeg', 'webp'],
+        },
+      ],
+    });
+
+    if (selected && typeof selected === 'string') {
+      console.log(selected);
+      setImg(convertFileSrc(selected));
+    }
+  };
+
   return (
-    <main className='container'>
-      <h1>Welcome to Tauri + React</h1>
+    <main className='bg-background h-screen w-screen'>
+      <div className='flex h-full w-full flex-col items-center justify-center'>
+        <h1> hi mak</h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-          <Button className='cursor-pointer'>Hi mark</Button>
-        </CardFooter>
-      </Card>
-
-      <div className='row'>
-        <a href='https://vite.dev' target='_blank'>
-          <img src='/vite.svg' className='logo vite' alt='Vite logo' />
-        </a>
-        <a href='https://tauri.app' target='_blank'>
-          <img src='/tauri.svg' className='logo tauri' alt='Tauri logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className='bg-red-100'
-        onSubmit={e => {
-          e.preventDefault();
-          greet();
-        }}
-      >
         <input
-          id='greet-input'
-          onChange={e => setName(e.currentTarget.value)}
-          placeholder='Enter a name...'
+          type='text'
+          value={name}
+          onChange={e => {
+            setName(e.currentTarget.value);
+          }}
         />
-        <button type='submit'>Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+        <Button onClick={greet}>Say hi!</Button>
+        <div className='mt-10'>{greetMsg}</div>
+
+        <Button onClick={selectImage}>Pick file</Button>
+
+        <img src={img} />
+      </div>
     </main>
   );
 }
